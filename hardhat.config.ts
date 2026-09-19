@@ -34,5 +34,12 @@ export default defineConfig({
       url: configVariable("SEPOLIA_RPC_URL"),
       accounts: [configVariable("SEPOLIA_PRIVATE_KEY")],
     },
+    botTestnet: {
+      type: "http",
+      chainType: "generic",
+      chainId: 968,
+      url: "https://rpc.bohr.life",
+      accounts: [configVariable("BOT_DEPLOYER_PRIVATE_KEY")],
+    },
   },
 });

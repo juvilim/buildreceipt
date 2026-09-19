@@ -1,0 +1,49 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_34-b7c5ea8a21a9d10892e32b815bedeea7140e64df",
+  "solcVersion": "0.8.34",
+  "solcLongVersion": "0.8.34+commit.80d5c536",
+  "compilerType": "solc",
+  "toolVersions": {
+    "hardhat": "3.17.0"
+  },
+  "userSourceNameMap": {
+    "contracts/BuildReceipt.sol": "project/contracts/BuildReceipt.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "osaka",
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode.linkReferences",
+            "evm.bytecode.object",
+            "evm.bytecode.opcodes",
+            "evm.bytecode.sourceMap",
+            "evm.deployedBytecode.immutableReferences",
+            "evm.deployedBytecode.linkReferences",
+            "evm.deployedBytecode.object",
+            "evm.deployedBytecode.opcodes",
+            "evm.deployedBytecode.sourceMap",
+            "evm.methodIdentifiers"
+          ]
+        }
+      },
+      "remappings": []
+    },
+    "sources": {
+      "project/contracts/BuildReceipt.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.34;\n\n/// @title BuildReceipt\n/// @notice An append-only registry of build release receipts.\ncontract BuildReceipt {\n    uint256 public constant MAX_PROJECT_LENGTH = 128;\n    uint256 public constant MAX_VERSION_LENGTH = 128;\n    uint256 public constant MAX_RELEASE_URL_LENGTH = 2_048;\n    uint256 public constant MAX_COMMIT_HASH_LENGTH = 128;\n    uint256 public constant MAX_NOTE_LENGTH = 2_048;\n\n    struct Receipt {\n        address builder;\n        uint256 createdAt;\n        bytes32 contentHash;\n        string project;\n        string version;\n        string releaseUrl;\n        string commitHash;\n        string note;\n    }\n\n    uint256 public receiptCount;\n    mapping(uint256 => Receipt) public receipts;\n    mapping(address => uint256[]) private receiptIdsByBuilder;\n\n    event ReceiptCreated(uint256 indexed receiptId, address indexed builder, bytes32 contentHash);\n\n    error EmptyField(string fieldName);\n    error FieldTooLong(string fieldName, uint256 maxLength);\n\n    /// @notice Stores a release receipt. Receipts are immutable once created.\n    function createReceipt(\n        string calldata project,\n        string calldata version,\n        string calldata releaseUrl,\n        string calldata commitHash,\n        string calldata note\n    ) external returns (uint256 receiptId) {\n        _validateField(project, \"project\", MAX_PROJECT_LENGTH);\n        _validateField(version, \"version\", MAX_VERSION_LENGTH);\n        _validateField(releaseUrl, \"releaseUrl\", MAX_RELEASE_URL_LENGTH);\n        _validateField(commitHash, \"commitHash\", MAX_COMMIT_HASH_LENGTH);\n        _validateField(note, \"note\", MAX_NOTE_LENGTH);\n\n        receiptId = ++receiptCount;\n        bytes32 contentHash = keccak256(\n            abi.encode(msg.sender, project, version, releaseUrl, commitHash, note)\n        );\n\n        receipts[receiptId] = Receipt({\n            builder: msg.sender,\n            createdAt: block.timestamp,\n            contentHash: contentHash,\n            project: project,\n            version: version,\n            releaseUrl: releaseUrl,\n            commitHash: commitHash,\n            note: note\n        });\n        receiptIdsByBuilder[msg.sender].push(receiptId);\n\n        emit ReceiptCreated(receiptId, msg.sender, contentHash);\n    }\n\n    function getReceiptIds(address builder) external view returns (uint256[] memory) {\n        return receiptIdsByBuilder[builder];\n    }\n\n    function _validateField(\n        string calldata value,\n        string memory fieldName,\n        uint256 maxLength\n    ) private pure {\n        uint256 length = bytes(value).length;\n        if (length == 0) revert EmptyField(fieldName);\n        if (length > maxLength) revert FieldTooLong(fieldName, maxLength);\n    }\n}\n"
+      }
+    }
+  }
+}
