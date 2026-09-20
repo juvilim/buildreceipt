@@ -1,13 +1,38 @@
-type TransactionStatusProps = { message: string; completedFields: number }
+import type { Hash } from 'viem'
+import { botTestnetTransactionUrl } from '../config/chains'
+import type { TransactionState } from '../types'
 
-export function TransactionStatus({ message, completedFields }: TransactionStatusProps) {
+type TransactionStatusProps = {
+  message: string
+  completedFields: number
+  state: TransactionState
+  transactionHash: Hash | null
+}
+
+const stateLabels: Record<TransactionState, string> = {
+  disconnected: 'DISCONNECTED',
+  connecting: 'CONNECTING',
+  'wrong-network': 'WRONG_NETWORK',
+  ready: 'READY',
+  'awaiting-wallet': 'AWAITING_WALLET',
+  confirming: 'CONFIRMING',
+  confirmed: 'CONFIRMED',
+  error: 'ERROR',
+}
+
+export function TransactionStatus({ message, completedFields, state, transactionHash }: TransactionStatusProps) {
   return (
     <section className="transaction-status section-wrap" aria-labelledby="transaction-title">
       <div className="transaction-copy">
         <span className="status-icon" aria-hidden="true">i</span>
         <div>
-          <h2 id="transaction-title">TX_STATUS: DRAFT</h2>
+          <h2 id="transaction-title">TX_STATUS: {stateLabels[state]}</h2>
           <p role="status" aria-live="polite">{message}</p>
+          {transactionHash && (
+            <a className="transaction-link" href={botTestnetTransactionUrl(transactionHash)} target="_blank" rel="noreferrer">
+              View transaction on BOTScan <span aria-hidden="true">↗</span>
+            </a>
+          )}
         </div>
       </div>
       <div className="readiness">

@@ -82,7 +82,9 @@ npm install
 npm run dev
 ```
 
-The frontend is currently a responsive UI shell. MetaMask connection and live contract reads/writes are the next integration milestone.
+The frontend connects to MetaMask, adds or switches to BOT Chain Testnet, creates receipts through the deployed contract, and loads the connected wallet's receipt history.
+
+Before publishing a frontend release, complete the [manual browser test checklist](docs/MANUAL_TESTING.md). The checklist includes wallet approval and rejection, an accidentally closed MetaMask sidebar, network switching, a real testnet receipt, history persistence, wallet separation, and BOTScan verification.
 
 ## BOT Chain Testnet
 
@@ -150,7 +152,8 @@ Public reads are also available through `receiptCount()` and `receipts(receiptId
 - [x] BOT Chain testnet deployment
 - [x] First on-chain testnet receipt
 - [x] Responsive frontend shell
-- [ ] MetaMask and live Web3 integration
+- [x] MetaMask and live Web3 integration
+- [ ] Manual browser transaction gate
 - [ ] Shareable receipt verification pages
 - [ ] BOT Chain mainnet deployment
 

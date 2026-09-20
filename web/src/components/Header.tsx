@@ -1,11 +1,36 @@
+import type { Address } from 'viem'
 import { LogoMark } from './LogoMark'
+import type { TransactionState } from '../types'
 
 type HeaderProps = {
   completedFields: number
+  account: Address | null
+  hasMetaMask: boolean
+  state: TransactionState
   onConnect: () => void
+  onSwitchNetwork: () => void
 }
 
-export function Header({ completedFields, onConnect }: HeaderProps) {
+function shortAddress(address: Address) {
+  return `${address.slice(0, 6)}…${address.slice(-4)}`
+}
+
+export function Header({ completedFields, account, hasMetaMask, state, onConnect, onSwitchNetwork }: HeaderProps) {
+  const wrongNetwork = state === 'wrong-network'
+  const connecting = state === 'connecting'
+  const networkLabel = !hasMetaMask
+    ? 'MetaMask not found'
+    : !account
+      ? 'Wallet disconnected'
+      : wrongNetwork ? 'Wrong network' : 'BOT Testnet'
+  const buttonLabel = wrongNetwork
+    ? 'Switch network'
+    : connecting
+      ? 'MetaMask pending'
+      : account
+        ? shortAddress(account)
+        : 'Connect wallet'
+
   return (
     <header className="site-header">
       <a className="brand" href="#top" aria-label="BuildReceipt home">
@@ -18,15 +43,26 @@ export function Header({ completedFields, onConnect }: HeaderProps) {
         <a href="#history">Receipts</a>
       </nav>
       <div className="header-actions">
-        <div className="network-status" role="status" aria-live="polite">
+        <div className={`network-status ${wrongNetwork ? 'network-status--wrong' : ''} ${!account ? 'network-status--idle' : ''}`} role="status" aria-live="polite">
           <span className="status-dot" aria-hidden="true" />
-          <span>BOT Testnet</span>
+          <span>{networkLabel}</span>
           <span className="status-divider" aria-hidden="true">/</span>
           <span className="tabular">{completedFields}/5 ready</span>
         </div>
-        <button className="button button--secondary" type="button" onClick={onConnect}>
-          Connect wallet
+        <button
+          className="button button--secondary tabular"
+          type="button"
+          onClick={wrongNetwork ? onSwitchNetwork : onConnect}
+          disabled={connecting}
+          aria-describedby={connecting ? 'wallet-pending-help' : undefined}
+        >
+          {buttonLabel}
         </button>
+        {connecting && (
+          <span id="wallet-pending-help" className="sr-only">
+            Open MetaMask from the browser toolbar to complete or reject the pending request.
+          </span>
+        )}
       </div>
     </header>
   )

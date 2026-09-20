@@ -1,10 +1,14 @@
 import type { FormEvent } from 'react'
+import { FIELD_LIMITS } from '../config/contract'
 import type { ReceiptDraft } from '../types'
 
 type ReceiptComposerProps = {
   draft: ReceiptDraft
+  disabled: boolean
+  submitDisabled?: boolean
+  submitLabel: string
   onChange: (draft: ReceiptDraft) => void
-  onPrepare: () => void
+  onPrepare: () => void | Promise<void>
 }
 
 const fields: Array<{
@@ -14,17 +18,17 @@ const fields: Array<{
   maxLength: number
   type?: 'url'
 }> = [
-  { key: 'project', label: 'Project', placeholder: 'BuildReceipt', maxLength: 128 },
-  { key: 'version', label: 'Version', placeholder: '1.0.0', maxLength: 128 },
-  { key: 'releaseUrl', label: 'Release URL', placeholder: 'https://example.com/releases/1.0.0', maxLength: 2048, type: 'url' },
-  { key: 'commitHash', label: 'Commit hash', placeholder: '02c4a7d', maxLength: 128 },
-  { key: 'note', label: 'Release note', placeholder: 'What changed in this release?', maxLength: 2048 },
+  { key: 'project', label: 'Project', placeholder: 'BuildReceipt', maxLength: FIELD_LIMITS.project },
+  { key: 'version', label: 'Version', placeholder: '1.0.0', maxLength: FIELD_LIMITS.version },
+  { key: 'releaseUrl', label: 'Release URL', placeholder: 'https://example.com/releases/1.0.0', maxLength: FIELD_LIMITS.releaseUrl, type: 'url' },
+  { key: 'commitHash', label: 'Commit hash', placeholder: '02c4a7d', maxLength: FIELD_LIMITS.commitHash },
+  { key: 'note', label: 'Release note', placeholder: 'What changed in this release?', maxLength: FIELD_LIMITS.note },
 ]
 
-export function ReceiptComposer({ draft, onChange, onPrepare }: ReceiptComposerProps) {
+export function ReceiptComposer({ draft, disabled, submitDisabled = disabled, submitLabel, onChange, onPrepare }: ReceiptComposerProps) {
   function submitDraft(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    onPrepare()
+    void onPrepare()
   }
 
   return (
@@ -49,6 +53,7 @@ export function ReceiptComposer({ draft, onChange, onPrepare }: ReceiptComposerP
               {isNote ? (
                 <textarea
                   id={fieldId}
+                  disabled={disabled}
                   maxLength={field.maxLength}
                   onChange={(event) => onChange({ ...draft, [field.key]: event.target.value })}
                   placeholder={field.placeholder}
@@ -58,6 +63,7 @@ export function ReceiptComposer({ draft, onChange, onPrepare }: ReceiptComposerP
               ) : (
                 <input
                   id={fieldId}
+                  disabled={disabled}
                   maxLength={field.maxLength}
                   onChange={(event) => onChange({ ...draft, [field.key]: event.target.value })}
                   placeholder={field.placeholder}
@@ -70,8 +76,8 @@ export function ReceiptComposer({ draft, onChange, onPrepare }: ReceiptComposerP
         })}
       </div>
       <div className="form-footer">
-        <p>Nothing leaves this browser during preview mode.</p>
-        <button className="button button--primary" type="submit">Prepare receipt</button>
+        <p>One wallet transaction creates a permanent, append-only record.</p>
+        <button className="button button--primary" disabled={submitDisabled} type="submit">{submitLabel}</button>
       </div>
     </form>
   )
