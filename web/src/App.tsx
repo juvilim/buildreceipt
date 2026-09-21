@@ -91,6 +91,10 @@ function App() {
               : 'Create on-chain receipt'
 
   useEffect(() => {
+    if (Object.values(draft).every((value) => value === '')) {
+      localStorage.removeItem(DRAFT_STORAGE_KEY)
+      return
+    }
     localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(draft))
   }, [draft])
 
@@ -139,7 +143,8 @@ function App() {
       await web3.switchNetwork()
       return
     }
-    await web3.createReceipt(draft)
+    const created = await web3.createReceipt(draft)
+    if (created) setDraft(initialDraft)
   }
 
   return (

@@ -66,38 +66,47 @@ Expected:
 Expected:
 
 - MetaMask shows chain ID `968` and currency `BOT`.
-- BuildReceipt shows `BOT Testnet` and status `READY`.
+- BuildReceipt shows `BOT Testnet`; transaction status remains `DRAFT_INCOMPLETE` until all five fields are valid.
 - Rejecting either wallet prompt shows an error without losing the draft.
 
 ## Receipt tests
 
-### M-05 — Reject receipt creation
+### M-05 — Reject receipt creation, then retry
 
 1. Connect the user-testing wallet on BOT Chain Testnet.
-2. Complete all five receipt fields with valid values.
-3. Click **Create on-chain receipt**.
-4. Reject the transaction in MetaMask.
+2. Complete all five receipt fields with the release values you intend to record.
+3. Copy the five values into the test notes so you can compare them after rejection.
+4. Click **Create on-chain receipt**.
+5. Reject the transaction in MetaMask.
+6. Confirm that all five fields still contain exactly the same values.
+7. Confirm that no new receipt appears in history and no transaction hash is shown.
+8. Click **Create on-chain receipt** again without re-entering the fields.
+9. This time, approve the transaction in MetaMask.
+10. Wait for `TX_STATUS: CONFIRMED`.
 
 Expected:
 
-- No receipt is created and no test BOT is spent.
-- The failure notification appears near the header.
-- The draft remains available for another attempt.
+- The rejected attempt creates no receipt and spends no test BOT.
+- The rejection notification appears near the header and identifies the canceled wallet action.
+- The complete draft remains available unchanged for the retry.
+- The retry progresses through wallet approval and chain confirmation exactly once.
+- After confirmation, the confirmed receipt stays visible while all five composer fields reset.
+- Refreshing the page does not restore the confirmed draft values from `localStorage`.
 
-### M-06 — Create a valid receipt (**on-chain**)
+### M-06 — Verify the successfully retried receipt (**on-chain**)
 
-1. Record the current number of receipts shown for the connected wallet.
-2. Complete all five fields with a unique version and note.
-3. Click **Create on-chain receipt**.
-4. Confirm the transaction in MetaMask.
-5. Wait for `TX_STATUS: CONFIRMED`.
+The successful retry from M-05 fulfills this case. Do not create a second receipt.
+
+1. Record the confirmed receipt ID and transaction hash from M-05.
+2. Confirm that wallet history increased by exactly one receipt compared with its count before M-05.
+3. Compare the confirmed receipt with the five values recorded before rejection.
 
 Expected:
 
-- The UI moves through wallet approval and confirmation states.
-- A BOTScan transaction link appears after submission.
+- Only the approved retry produced an on-chain transaction.
+- A BOTScan transaction link appears for that transaction.
 - The receipt preview shows the chain-assigned ID, builder, timestamp, and content hash.
-- The connected wallet history increases by one receipt.
+- Every stored release field matches the preserved draft that was retried.
 - The new history entry is marked **Verified**.
 
 Record the receipt ID and transaction hash in the test notes.
