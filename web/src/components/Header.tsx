@@ -8,6 +8,7 @@ type HeaderProps = {
   hasMetaMask: boolean
   state: TransactionState
   onConnect: () => void
+  onSwitchAccount: () => void
   onSwitchNetwork: () => void
 }
 
@@ -15,7 +16,7 @@ function shortAddress(address: Address) {
   return `${address.slice(0, 6)}…${address.slice(-4)}`
 }
 
-export function Header({ completedFields, account, hasMetaMask, state, onConnect, onSwitchNetwork }: HeaderProps) {
+export function Header({ completedFields, account, hasMetaMask, state, onConnect, onSwitchAccount, onSwitchNetwork }: HeaderProps) {
   const wrongNetwork = state === 'wrong-network'
   const connecting = state === 'connecting'
   const networkLabel = !hasMetaMask
@@ -28,8 +29,13 @@ export function Header({ completedFields, account, hasMetaMask, state, onConnect
     : connecting
       ? 'MetaMask pending'
       : account
-        ? shortAddress(account)
+        ? `${shortAddress(account)} · Switch`
         : 'Connect wallet'
+  const handleWalletAction = wrongNetwork
+    ? onSwitchNetwork
+    : account
+      ? onSwitchAccount
+      : onConnect
 
   return (
     <header className="site-header">
@@ -52,7 +58,7 @@ export function Header({ completedFields, account, hasMetaMask, state, onConnect
         <button
           className="button button--secondary tabular"
           type="button"
-          onClick={wrongNetwork ? onSwitchNetwork : onConnect}
+          onClick={handleWalletAction}
           disabled={connecting}
           aria-describedby={connecting ? 'wallet-pending-help' : undefined}
         >

@@ -84,6 +84,7 @@ function App() {
         hasMetaMask={web3.hasMetaMask}
         state={web3.state}
         onConnect={web3.connect}
+        onSwitchAccount={web3.switchAccount}
         onSwitchNetwork={web3.switchNetwork}
       />
       {web3.state === 'connecting' && (

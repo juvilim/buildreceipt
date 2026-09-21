@@ -18,10 +18,10 @@ import type { ReceiptDraft, ReceiptRecord, TransactionState } from '../types'
 
 const explorer = botTestnet.blockExplorers.default.url
 
-function errorMessage(error: unknown) {
+function errorMessage(error: unknown, rejectedMessage = 'Connection request rejected in MetaMask. Your draft is still here.') {
   const code = typeof error === 'object' && error && 'code' in error ? error.code : undefined
   if (code === 4001) {
-    return 'Connection request rejected in MetaMask. Your draft is still here.'
+    return rejectedMessage
   }
   if (code === -32002) {
     return 'A MetaMask request is already pending. Open MetaMask from the browser toolbar and complete or reject it.'
@@ -184,6 +184,36 @@ export function useBuildReceipt() {
     }
   }, [refreshHistory])
 
+  const switchAccount = useCallback(async () => {
+    const provider = window.ethereum
+    if (!provider) {
+      setMessage('MetaMask was not detected. Install it to continue.')
+      return
+    }
+
+    if (connectionPending.current) {
+      setState('connecting')
+      setMessage('A MetaMask account request is already waiting. Reopen MetaMask from your browser toolbar to continue.')
+      return
+    }
+
+    connectionPending.current = true
+    setState('connecting')
+    setMessage('Choose the account you want to use with BuildReceipt in MetaMask.')
+    try {
+      await provider.request({
+        method: 'wallet_requestPermissions',
+        params: [{ eth_accounts: {} }],
+      })
+      await syncWallet()
+    } catch (error) {
+      setState('error')
+      setMessage(errorMessage(error, 'Account switch canceled in MetaMask. The current wallet remains connected.'))
+    } finally {
+      connectionPending.current = false
+    }
+  }, [syncWallet])
+
   const createReceipt = useCallback(async (draft: ReceiptDraft) => {
     const provider = window.ethereum
     if (!provider || !account) {
@@ -255,9 +285,10 @@ export function useBuildReceipt() {
     historyLoading,
     hasMetaMask,
     connect,
+    switchAccount,
     switchNetwork,
     createReceipt,
     selectReceipt,
     clearSelectedReceipt,
-  }), [account, chainId, state, message, transactionHash, selectedReceipt, history, historyLoading, hasMetaMask, connect, switchNetwork, createReceipt, selectReceipt, clearSelectedReceipt])
+  }), [account, chainId, state, message, transactionHash, selectedReceipt, history, historyLoading, hasMetaMask, connect, switchAccount, switchNetwork, createReceipt, selectReceipt, clearSelectedReceipt])
 }

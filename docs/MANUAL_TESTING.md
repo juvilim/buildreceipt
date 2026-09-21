@@ -131,8 +131,8 @@ Expected:
 ### M-09 — Keep wallet histories separate
 
 1. Note the receipt IDs shown for the user-testing account.
-2. Switch MetaMask to a different account.
-3. Approve the connection if prompted.
+2. Click the connected address in the header, which is labeled **Switch**.
+3. Choose a different account in MetaMask and approve it.
 
 Expected:
 
