@@ -56,6 +56,7 @@ export function ReceiptPreview({ draft, account, contentHash, receipt }: Receipt
           <span>Content hash</span>
           <code>{receipt?.contentHash ?? contentHash ?? 'Generated after wallet connection'}</code>
         </div>
+        <p className="receipt-footer">Permanent · Append-only · Builder-signed</p>
         <div className="stamp" aria-label={anchored ? 'Verified content hash' : 'Draft—not yet recorded on-chain'}>
           {anchored ? 'Verified' : 'Draft'}
         </div>

@@ -20,7 +20,19 @@ export function ReceiptHistory({ account, loading, receipts, onSelect }: Receipt
         <span className="history-count tabular">{count} {receipts.length === 1 ? 'receipt' : 'receipts'}</span>
       </div>
       <div className="history-list">
-        {receipts.map((receipt) => (
+        {loading && (
+          <div className="history-empty" role="status">
+            <strong>Reading receipt history…</strong>
+            <p>Loading this wallet&apos;s records from BOT Chain Testnet.</p>
+          </div>
+        )}
+        {!loading && !account && (
+          <div className="history-empty" role="status">
+            <strong>Connect a wallet to view receipt history.</strong>
+            <p>Your BuildReceipt records will load directly from BOT Chain Testnet.</p>
+          </div>
+        )}
+        {!loading && receipts.map((receipt) => (
           <article className="history-card" key={receipt.id}>
             <div className="history-id"><span>Receipt</span><strong className="tabular">#{String(receipt.id).padStart(6, '0')}</strong></div>
             <div className="history-primary"><h3>{receipt.project}</h3><p>{receipt.note}</p></div>
@@ -35,16 +47,18 @@ export function ReceiptHistory({ account, loading, receipts, onSelect }: Receipt
             </div>
           </article>
         ))}
+        {!loading && account && receipts.length === 0 && (
+          <div className="history-empty" role="status">
+            <strong>This wallet has no BuildReceipt records yet.</strong>
+            <p>Once created, receipts appear here as permanent, append-only release records.</p>
+          </div>
+        )}
       </div>
-      <p className="mock-note">
-        {loading
-          ? 'Reading receipts from BOT Chain Testnet…'
-          : !account
-            ? 'Connect a wallet to load its on-chain receipt history.'
-            : receipts.length === 0
-              ? 'This wallet has no BuildReceipt records yet.'
-              : 'Loaded directly from the BuildReceipt contract.'}
-      </p>
+      {!loading && account && receipts.length > 0 && (
+        <p className="mock-note">
+          Loaded directly from the BuildReceipt contract.
+        </p>
+      )}
     </section>
   )
 }

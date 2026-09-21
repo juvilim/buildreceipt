@@ -22,9 +22,9 @@ const stateLabels: Record<TransactionState, string> = {
 
 export function TransactionStatus({ message, completedFields, state, transactionHash }: TransactionStatusProps) {
   return (
-    <section className="transaction-status section-wrap" aria-labelledby="transaction-title">
+    <section className={`transaction-status transaction-status--${state} section-wrap`} aria-labelledby="transaction-title">
       <div className="transaction-copy">
-        <span className="status-icon" aria-hidden="true">i</span>
+        <span className="status-icon" aria-hidden="true">{state === 'confirmed' ? '✓' : state === 'error' || state === 'wrong-network' ? '!' : 'i'}</span>
         <div>
           <h2 id="transaction-title">TX_STATUS: {stateLabels[state]}</h2>
           <p role="status" aria-live="polite">{message}</p>
@@ -38,6 +38,11 @@ export function TransactionStatus({ message, completedFields, state, transaction
       <div className="readiness">
         <span>Receipt readiness</span>
         <strong className="tabular">{completedFields}/5 fields</strong>
+        <span className="readiness-meter" aria-label={`${completedFields} of 5 receipt fields completed`}>
+          {Array.from({ length: 5 }, (_, index) => (
+            <i className={index < completedFields ? 'is-complete' : ''} key={index} aria-hidden="true" />
+          ))}
+        </span>
       </div>
     </section>
   )
