@@ -40,6 +40,8 @@ export function useBuildReceipt() {
   const [selectedReceipt, setSelectedReceipt] = useState<ReceiptRecord | null>(null)
   const [history, setHistory] = useState<ReceiptRecord[]>([])
   const [historyLoading, setHistoryLoading] = useState(false)
+  const [receiptLoading, setReceiptLoading] = useState(false)
+  const [receiptError, setReceiptError] = useState<string | null>(null)
   const connectionPending = useRef(false)
   const hasMetaMask = typeof window !== 'undefined' && Boolean(window.ethereum)
 
@@ -76,7 +78,6 @@ export function useBuildReceipt() {
 
     const address = getAddress(accounts[0])
     setAccount(address)
-    setSelectedReceipt(null)
     setTransactionHash(null)
     if (currentChain !== botTestnet.id) {
       setHistory([])
@@ -267,9 +268,20 @@ export function useBuildReceipt() {
     }
   }, [account, chainId, connect, refreshHistory, switchNetwork])
 
-  const selectReceipt = useCallback((receipt: ReceiptRecord) => {
-    setSelectedReceipt(receipt)
-    document.querySelector('#workspace')?.scrollIntoView({ behavior: 'smooth' })
+  const loadReceipt = useCallback(async (id: bigint) => {
+    setReceiptLoading(true)
+    setReceiptError(null)
+    try {
+      const receipt = await readReceipt(id)
+      setSelectedReceipt(receipt)
+      return receipt
+    } catch (error) {
+      setSelectedReceipt(null)
+      setReceiptError(errorMessage(error))
+      return null
+    } finally {
+      setReceiptLoading(false)
+    }
   }, [])
 
   const clearSelectedReceipt = useCallback(() => setSelectedReceipt(null), [])
@@ -283,12 +295,14 @@ export function useBuildReceipt() {
     selectedReceipt,
     history,
     historyLoading,
+    receiptLoading,
+    receiptError,
     hasMetaMask,
     connect,
     switchAccount,
     switchNetwork,
     createReceipt,
-    selectReceipt,
+    loadReceipt,
     clearSelectedReceipt,
-  }), [account, chainId, state, message, transactionHash, selectedReceipt, history, historyLoading, hasMetaMask, connect, switchAccount, switchNetwork, createReceipt, selectReceipt, clearSelectedReceipt])
+  }), [account, chainId, state, message, transactionHash, selectedReceipt, history, historyLoading, receiptLoading, receiptError, hasMetaMask, connect, switchAccount, switchNetwork, createReceipt, loadReceipt, clearSelectedReceipt])
 }

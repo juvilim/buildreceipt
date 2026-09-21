@@ -6,7 +6,7 @@ export type ReceiptDraft = {
   note: string
 }
 
-import type { Address, Hex } from 'viem'
+import type { Address, Hash, Hex } from 'viem'
 
 export type ReceiptRecord = ReceiptDraft & {
   id: bigint
@@ -14,6 +14,8 @@ export type ReceiptRecord = ReceiptDraft & {
   createdAt: bigint
   contentHash: Hex
   verified: boolean
+  transactionHash: Hash | null
+  blockNumber: bigint | null
 }
 
 export type TransactionState =

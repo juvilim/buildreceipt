@@ -1,7 +1,12 @@
+import { botTestnet } from '../config/chains'
+import { BUILD_RECEIPT_ADDRESS } from '../config/contract'
+
+const contractUrl = `${botTestnet.blockExplorers.default.url}/address/${BUILD_RECEIPT_ADDRESS}`
+
 export function HeroIntro() {
   return (
     <section className="hero-intro section-wrap" id="top">
-      <div className="hero-grid">
+      <div className="hero-grid" id="registry">
         <div className="hero-main">
           <p className="eyebrow">On-chain shipping log for developers</p>
           <h1>Proof that<br /><em>you shipped.</em></h1>
@@ -15,18 +20,18 @@ export function HeroIntro() {
             <span>Builder-owned</span>
           </div>
         </div>
-        <aside className="hero-protocol" aria-label="BuildReceipt protocol summary">
+        <aside className="hero-protocol" aria-label="BuildReceipt public registry">
           <div className="protocol-topline">
-            <span>RELEASE_PROTOCOL</span>
-            <span className="protocol-state"><i aria-hidden="true" /> TESTNET_READY</span>
+            <span>PUBLIC_REGISTRY</span>
+            <span className="protocol-state"><i aria-hidden="true" /> CONTRACT_LIVE</span>
           </div>
-          <ol>
-            <li><span>01</span><strong>Describe</strong><small>Release details</small></li>
-            <li><span>02</span><strong>Authorize</strong><small>Wallet transaction</small></li>
-            <li><span>03</span><strong>Anchor</strong><small>BOT Chain record</small></li>
-            <li><span>04</span><strong>Prove</strong><small>Shareable receipt</small></li>
-          </ol>
-          <p>Quiet, precise, permanent.</p>
+          <dl className="registry-details">
+            <div><dt>Network</dt><dd>{botTestnet.name}</dd></div>
+            <div><dt>Chain ID</dt><dd>{botTestnet.id}</dd></div>
+            <div><dt>Contract</dt><dd>{`${BUILD_RECEIPT_ADDRESS.slice(0, 8)}…${BUILD_RECEIPT_ADDRESS.slice(-6)}`}</dd></div>
+            <div><dt>Record</dt><dd>Append-only</dd></div>
+          </dl>
+          <a className="protocol-link" href={contractUrl} target="_blank" rel="noreferrer">View deployed contract <span aria-hidden="true">↗</span></a>
         </aside>
       </div>
     </section>

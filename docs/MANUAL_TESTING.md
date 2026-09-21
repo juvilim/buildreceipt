@@ -26,7 +26,7 @@ Expected:
 
 - The connecting notice appears while MetaMask is waiting.
 - The shortened user-testing address replaces **Connect wallet**.
-- The status becomes `READY` on BOT Chain Testnet, or `WRONG_NETWORK` on another network.
+- On BOT Chain Testnet, the status becomes `DRAFT_INCOMPLETE` until all five release fields are valid; on another network it becomes `WRONG_NETWORK`.
 - No transaction is sent and no BOT is spent.
 
 ### M-02 — Close the MetaMask sidebar while connecting
@@ -107,24 +107,30 @@ Record the receipt ID and transaction hash in the test notes.
 1. Refresh the page after M-06 confirms.
 2. Reconnect the same user-testing wallet if necessary.
 3. Scroll to **Receipts you can point to**.
-4. Select **View receipt** on the new record.
+4. Select **Quick view** on the new record.
+5. Close the dialog, then select **View proof**.
 
 Expected:
 
 - The receipt is loaded directly from BOT Chain Testnet after refresh.
-- Selecting it scrolls to the workspace and displays it in the receipt preview.
+- **Quick view** opens a focused receipt dialog without replacing the composer preview.
 - Its project, version, URL, commit, note, builder, timestamp, and content hash match the submitted receipt.
+- Escape, the close button, and clicking the backdrop close the dialog and return focus to the history action.
+- **View proof** opens the standalone `?receipt=<id>` verification page without requiring a wallet connection.
 
 ### M-08 — Validate required fields and length limits
 
 1. Leave one required field empty and attempt to create a receipt.
 2. Repeat for each required field.
-3. Paste text longer than the displayed field limit into each field.
+3. Fill all five fields, but enter `not-a-url` as the release URL.
+4. Paste text longer than the displayed field limit into each field.
 
 Expected:
 
-- An incomplete draft is rejected before MetaMask opens.
-- The error identifies the invalid field.
+- **Complete release details** remains disabled until all five fields are valid.
+- When five fields are present but the URL is invalid, the action reads **Fix invalid release details**, the URL field is highlighted, and the exact URL requirement appears beside the action and in transaction status.
+- A complete draft changes the action to **Connect wallet to sign** or **Create on-chain receipt**, depending on wallet state.
+- A connected wallet shows `TX_STATUS: DRAFT_INCOMPLETE` until the draft is valid, then `TX_STATUS: READY_TO_SIGN`.
 - Inputs do not accept more than their displayed maximum length.
 - No transaction is sent.
 
@@ -154,6 +160,29 @@ Expected:
 - The event contains the same receipt ID, builder address, and content hash shown by BuildReceipt.
 - No private key or secret appears in the transaction, logs, or URL.
 
+### M-11 — Open and copy a public proof link
+
+1. Select a verified receipt from wallet history.
+2. Click **Copy proof link**.
+3. Open the copied URL in a private browser window without connecting MetaMask.
+
+Expected:
+
+- The URL contains `?receipt=<id>`.
+- The public page loads without a wallet connection.
+- The receipt displays its release fields, builder, UTC timestamp, block number, and verified content hash.
+- **View on BOTScan** opens the original `ReceiptCreated` transaction when event metadata is available.
+
+### M-12 — Reject a nonexistent public receipt
+
+1. Open the app with a receipt ID that does not exist, for example `?receipt=999999`.
+
+Expected:
+
+- The page displays **Receipt unavailable**.
+- The message identifies that the requested receipt does not exist.
+- No empty or falsely verified receipt is displayed.
+
 ## Test record
 
 | Case | Result | Notes / transaction hash |
@@ -168,3 +197,5 @@ Expected:
 | M-08 | ☐ Pass ☐ Fail | |
 | M-09 | ☐ Pass ☐ Fail | |
 | M-10 | ☐ Pass ☐ Fail | |
+| M-11 | ☐ Pass ☐ Fail | |
+| M-12 | ☐ Pass ☐ Fail | |

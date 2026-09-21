@@ -7,6 +7,8 @@ type TransactionStatusProps = {
   completedFields: number
   state: TransactionState
   transactionHash: Hash | null
+  draftReady: boolean
+  draftError?: string | null
 }
 
 const stateLabels: Record<TransactionState, string> = {
@@ -20,14 +22,23 @@ const stateLabels: Record<TransactionState, string> = {
   error: 'ERROR',
 }
 
-export function TransactionStatus({ message, completedFields, state, transactionHash }: TransactionStatusProps) {
+export function TransactionStatus({ message, completedFields, state, transactionHash, draftReady, draftError }: TransactionStatusProps) {
+  const statusLabel = state === 'ready'
+    ? draftReady ? 'READY_TO_SIGN' : 'DRAFT_INCOMPLETE'
+    : stateLabels[state]
+  const statusMessage = state === 'ready'
+    ? draftReady
+      ? 'Release details validated. Review the receipt, then sign with MetaMask.'
+      : draftError ?? 'Wallet connected. Complete all five valid fields to prepare the receipt.'
+    : message
+
   return (
     <section className={`transaction-status transaction-status--${state} section-wrap`} aria-labelledby="transaction-title">
       <div className="transaction-copy">
         <span className="status-icon" aria-hidden="true">{state === 'confirmed' ? '✓' : state === 'error' || state === 'wrong-network' ? '!' : 'i'}</span>
         <div>
-          <h2 id="transaction-title">TX_STATUS: {stateLabels[state]}</h2>
-          <p role="status" aria-live="polite">{message}</p>
+          <h2 id="transaction-title">TX_STATUS: {statusLabel}</h2>
+          <p role="status" aria-live="polite">{statusMessage}</p>
           {transactionHash && (
             <a className="transaction-link" href={botTestnetTransactionUrl(transactionHash)} target="_blank" rel="noreferrer">
               View transaction on BOTScan <span aria-hidden="true">↗</span>

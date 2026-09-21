@@ -7,6 +7,7 @@ type ReceiptComposerProps = {
   disabled: boolean
   submitDisabled?: boolean
   submitLabel: string
+  validationMessage?: string | null
   onChange: (draft: ReceiptDraft) => void
   onPrepare: () => void | Promise<void>
 }
@@ -25,7 +26,7 @@ const fields: Array<{
   { key: 'note', label: 'Release note', placeholder: 'What changed in this release?', maxLength: FIELD_LIMITS.note },
 ]
 
-export function ReceiptComposer({ draft, disabled, submitDisabled = disabled, submitLabel, onChange, onPrepare }: ReceiptComposerProps) {
+export function ReceiptComposer({ draft, disabled, submitDisabled = disabled, submitLabel, validationMessage, onChange, onPrepare }: ReceiptComposerProps) {
   function submitDraft(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     void onPrepare()
@@ -44,6 +45,7 @@ export function ReceiptComposer({ draft, disabled, submitDisabled = disabled, su
         {fields.map((field) => {
           const fieldId = `receipt-${field.key}`
           const isNote = field.key === 'note'
+          const hasError = Boolean(validationMessage?.startsWith(field.label))
           return (
             <label className={`field ${isNote ? 'field--full' : ''}`} htmlFor={fieldId} key={field.key}>
               <span className="field-label">
@@ -53,6 +55,8 @@ export function ReceiptComposer({ draft, disabled, submitDisabled = disabled, su
               {isNote ? (
                 <textarea
                   id={fieldId}
+                  aria-describedby={hasError ? 'receipt-validation-message' : undefined}
+                  aria-invalid={hasError || undefined}
                   disabled={disabled}
                   maxLength={field.maxLength}
                   onChange={(event) => onChange({ ...draft, [field.key]: event.target.value })}
@@ -63,6 +67,8 @@ export function ReceiptComposer({ draft, disabled, submitDisabled = disabled, su
               ) : (
                 <input
                   id={fieldId}
+                  aria-describedby={hasError ? 'receipt-validation-message' : undefined}
+                  aria-invalid={hasError || undefined}
                   disabled={disabled}
                   maxLength={field.maxLength}
                   onChange={(event) => onChange({ ...draft, [field.key]: event.target.value })}
@@ -76,7 +82,10 @@ export function ReceiptComposer({ draft, disabled, submitDisabled = disabled, su
         })}
       </div>
       <div className="form-footer">
-        <p>One wallet transaction creates a permanent, append-only record.</p>
+        <div className="form-footer__copy">
+          <p>One wallet transaction creates a permanent, append-only record.</p>
+          {validationMessage && <p className="form-error" id="receipt-validation-message" role="alert">{validationMessage}</p>}
+        </div>
         <button className="button button--primary" disabled={submitDisabled} type="submit">{submitLabel}</button>
       </div>
     </form>

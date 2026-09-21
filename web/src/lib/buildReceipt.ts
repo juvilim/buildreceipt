@@ -3,11 +3,13 @@ import {
   encodeAbiParameters,
   http,
   keccak256,
+  zeroAddress,
   type Address,
 } from 'viem'
 import { botTestnet } from '../config/chains'
 import {
   BUILD_RECEIPT_ADDRESS,
+  BUILD_RECEIPT_DEPLOYMENT_BLOCK,
   buildReceiptAbi,
   FIELD_LIMITS,
 } from '../config/contract'
@@ -73,14 +75,27 @@ function fieldLabel(key: keyof ReceiptDraft) {
 }
 
 export async function readReceipt(id: bigint): Promise<ReceiptRecord> {
-  const result = await publicClient.readContract({
-    address: BUILD_RECEIPT_ADDRESS,
-    abi: buildReceiptAbi,
-    functionName: 'receipts',
-    args: [id],
-  })
+  if (id < 1n) throw new Error('Receipt IDs start at 1.')
+
+  const [result, event] = await Promise.all([
+    publicClient.readContract({
+      address: BUILD_RECEIPT_ADDRESS,
+      abi: buildReceiptAbi,
+      functionName: 'receipts',
+      args: [id],
+    }),
+    publicClient.getContractEvents({
+      address: BUILD_RECEIPT_ADDRESS,
+      abi: buildReceiptAbi,
+      eventName: 'ReceiptCreated',
+      args: { receiptId: id },
+      fromBlock: BUILD_RECEIPT_DEPLOYMENT_BLOCK,
+      toBlock: 'latest',
+    }).then(([created]) => created ?? null).catch(() => null),
+  ])
 
   const [builder, createdAt, contentHash, project, version, releaseUrl, commitHash, note] = result
+  if (builder === zeroAddress) throw new Error(`Receipt #${id.toString()} does not exist.`)
   const draft = { project, version, releaseUrl, commitHash, note }
 
   return {
@@ -90,6 +105,8 @@ export async function readReceipt(id: bigint): Promise<ReceiptRecord> {
     contentHash,
     ...draft,
     verified: computeContentHash(builder, draft) === contentHash,
+    transactionHash: event?.transactionHash ?? null,
+    blockNumber: event?.blockNumber ?? null,
   }
 }
 

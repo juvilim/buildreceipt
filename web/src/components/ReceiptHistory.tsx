@@ -5,14 +5,16 @@ type ReceiptHistoryProps = {
   account: Address | null
   loading: boolean
   receipts: ReceiptRecord[]
-  onSelect: (receipt: ReceiptRecord) => void
+  copiedReceiptId: bigint | null
+  onCopyProofLink: (receipt: ReceiptRecord) => void | Promise<void>
+  onQuickView: (receipt: ReceiptRecord) => void
 }
 
-export function ReceiptHistory({ account, loading, receipts, onSelect }: ReceiptHistoryProps) {
+export function ReceiptHistory({ account, loading, receipts, copiedReceiptId, onCopyProofLink, onQuickView }: ReceiptHistoryProps) {
   const count = String(receipts.length).padStart(2, '0')
   return (
-    <section className="history section-wrap" aria-labelledby="history-title" id="history">
-      <div className="section-heading section-heading--row">
+    <section className="history section-wrap" aria-labelledby="history-title">
+      <div className="section-heading section-heading--row" id="history">
         <div>
           <p className="eyebrow">Connected wallet history</p>
           <h2 id="history-title">Receipts you can point to.</h2>
@@ -43,7 +45,11 @@ export function ReceiptHistory({ account, loading, receipts, onSelect }: Receipt
             </dl>
             <div className="history-action">
               <span className="anchored-stamp">{receipt.verified ? 'Verified' : 'Hash mismatch'}</span>
-              <button className="text-button" type="button" onClick={() => onSelect(receipt)}>View receipt <span aria-hidden="true">↗</span></button>
+              <a className="text-button history-public-link" href={`/?receipt=${receipt.id.toString()}`}>View proof</a>
+              <button className="text-button" type="button" onClick={() => onQuickView(receipt)}>Quick view</button>
+              <button className="text-button text-button--muted" type="button" onClick={() => void onCopyProofLink(receipt)}>
+                {copiedReceiptId === receipt.id ? 'Link copied' : 'Copy proof link'}
+              </button>
             </div>
           </article>
         ))}

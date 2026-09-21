@@ -82,7 +82,7 @@ npm install
 npm run dev
 ```
 
-The frontend connects to MetaMask, adds or switches to BOT Chain Testnet, creates receipts through the deployed contract, and loads the connected wallet's receipt history.
+The frontend connects to MetaMask, adds or switches to BOT Chain Testnet, creates receipts through the deployed contract, loads the connected wallet's history, and exposes public verification links such as `?receipt=1` without requiring a wallet connection.
 
 Before publishing a frontend release, complete the [manual browser test checklist](docs/MANUAL_TESTING.md). The checklist includes wallet approval and rejection, an accidentally closed MetaMask sidebar, network switching, a real testnet receipt, history persistence, wallet separation, and BOTScan verification.
 
@@ -154,7 +154,7 @@ Public reads are also available through `receiptCount()` and `receipts(receiptId
 - [x] Responsive frontend shell
 - [x] MetaMask and live Web3 integration
 - [ ] Manual browser transaction gate
-- [ ] Shareable receipt verification pages
+- [x] Shareable receipt verification pages
 - [ ] BOT Chain mainnet deployment
 
 ## License
