@@ -18,5 +18,22 @@
   "evmVersion": "osaka",
   "optimizerEnabled": false,
   "sourceSha256": "cd60b0b6f5be5e2598118bab5796e459bb9b702dbbabddb52246efc1b49e52f6",
-  "runtimeBytecodeSha256": "71188c334af3078261acc5207855d35d812e42fc9df4ab17a4939aa5d9a0ad1e"
+  "runtimeBytecodeSha256": "71188c334af3078261acc5207855d35d812e42fc9df4ab17a4939aa5d9a0ad1e",
+  "firstReceipt": {
+    "receiptId": 1,
+    "transactionHash": "0xa425b47d39fb507ef1345f77384c5056084c0d7a1d689c9722bb89e830c1da11",
+    "transactionUrl": "https://scan.botchain.ai/tx/0xa425b47d39fb507ef1345f77384c5056084c0d7a1d689c9722bb89e830c1da11",
+    "blockNumber": 24261851,
+    "timestamp": "2026-09-23T16:26:36.000Z",
+    "gasUsed": "458328",
+    "effectiveGasPriceWei": "20000000000",
+    "transactionCostWei": "9166560000000000",
+    "builderBalanceAfterWei": "27143780000000000",
+    "contentHash": "0x54c3ed585d8b8cebe01550531b1c10828efdd343909bc4017cf318890d32e51f",
+    "project": "BuildReceipt",
+    "version": "1.0.0-mainnet",
+    "releaseUrl": "https://github.com/juvilim/buildreceipt/commit/5498d6ba2db1144c42cd26006a85fc1bf4f050ad",
+    "commitHash": "5498d6ba2db1144c42cd26006a85fc1bf4f050ad",
+    "note": "First mainnet BuildReceipt, proving the production registry deployment."
+  }
 }

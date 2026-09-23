@@ -11,7 +11,7 @@
   ·
   <a href="https://scan.bohr.life/address/0x6c788cbc498795c0e3247d843431adbd844f73b9">Testnet contract</a>
   ·
-  <a href="https://scan.bohr.life/tx/0x0497d952772dd1c64d1479d5560c35d17ef7a0cff70bcef7ccc6923dea051e2c">First receipt</a>
+  <a href="https://scan.botchain.ai/tx/0xa425b47d39fb507ef1345f77384c5056084c0d7a1d689c9722bb89e830c1da11">First mainnet receipt</a>
 </p>
 
 ## What is BuildReceipt?
@@ -36,12 +36,14 @@ The registry is deliberately small and immutable:
 | Contract | [`0x6c788cbc498795c0e3247d843431adbd844f73b9`](https://scan.botchain.ai/address/0x6c788cbc498795c0e3247d843431adbd844f73b9) |
 | Deployment transaction | [`0xbdcf…ac7cb2`](https://scan.botchain.ai/tx/0xbdcf94fbdfe1a3b26b95ea8b35218d9171d125db0cf07f7f8137d93c41ac7cb2) |
 | Deployment block | [`24252534`](https://scan.botchain.ai/block/24252534) |
+| First mainnet receipt | [`#1 · 0xa425…da11`](https://scan.botchain.ai/tx/0xa425b47d39fb507ef1345f77384c5056084c0d7a1d689c9722bb89e830c1da11) |
+| First receipt content hash | `0x54c3ed585d8b8cebe01550531b1c10828efdd343909bc4017cf318890d32e51f` |
 | Deployer | `0x6d80683ce6e499b7bC499a5716B824959b9BCFe9` |
 | Solidity | `0.8.34+commit.80d5c536` |
 | Source verification | [Fully verified on BOTScan](https://scan.botchain.ai/address/0x6c788cbc498795c0e3247d843431adbd844f73b9?tab=contract) |
 | Deployment date | 23 September 2026 |
 
-The deployment succeeded with an initial receipt count of `0`. A post-deployment RPC check confirmed that the runtime bytecode exactly matches the locally tested artifact, and BOTScan fully verified the submitted source and compiler settings. The machine-readable deployment record is in [`deployments/bot-mainnet.json`](deployments/bot-mainnet.json).
+The deployment succeeded with an initial receipt count of `0`. A post-deployment RPC check confirmed that the runtime bytecode exactly matches the locally tested artifact, and BOTScan fully verified the submitted source and compiler settings. The guarded mainnet smoke test then created receipt `#1` and verified its stored fields, content hash, `ReceiptCreated` event, builder history, block timestamp, and post-transaction balance. The machine-readable deployment record is in [`deployments/bot-mainnet.json`](deployments/bot-mainnet.json).
 
 The mainnet and testnet contracts have the same hexadecimal address because they were deployed by the same account at the same deployment nonce. They remain independent contracts on separate chains.
 
@@ -145,6 +147,15 @@ The mainnet deployment script performs chain, balance, gas, reserve, source-hash
 ```bash
 CONFIRM_BOT_MAINNET_DEPLOY=YES npx hardhat run scripts/deploy-build-receipt-mainnet.ts
 ```
+
+Validate the deployed mainnet registry with a protected two-step smoke test. The first command is read-only: it checks the chain, bytecode, empty initial state, receipt simulation, estimated fee, expected content hash, and preserved balance. The second command creates the first mainnet receipt and verifies the stored fields, event, history, timestamp, and final balance:
+
+```bash
+npx hardhat run --no-compile scripts/verify-build-receipt-mainnet.ts
+CONFIRM_BOT_MAINNET_RECEIPT=YES npx hardhat run --no-compile scripts/verify-build-receipt-mainnet.ts
+```
+
+The write command is intentionally single-use. It refuses to run unless the registry still has a receipt count of `0`, preventing an accidental duplicate first receipt.
 
 After deployment, update the public deployment metadata and verify the contract reads and write flow with a freshly configured script. The existing verification script points to the published testnet contract and creates a real receipt, so running it spends test BOT:
 
