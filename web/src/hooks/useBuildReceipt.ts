@@ -82,9 +82,9 @@ export function useBuildReceipt() {
     setAccount(address)
     setTransactionHash(null)
     if (currentChain !== botTestnet.id) {
-      setHistory([])
       setState('wrong-network')
       setMessage('Switch MetaMask to BOT Chain Testnet before creating a receipt.')
+      await refreshHistory(address)
       return
     }
 
@@ -190,7 +190,9 @@ export function useBuildReceipt() {
       setChainId(currentChain)
       if (currentChain !== botTestnet.id) {
         setState('wrong-network')
-        setMessage('Wallet connected. Switch to BOT Chain Testnet to continue.')
+        setMessage('Wallet connected. Approve the BOT Chain Testnet switch in MetaMask to continue.')
+        if (address) void refreshHistory(address)
+        await switchNetwork()
         return
       }
       setState('ready')
@@ -202,7 +204,7 @@ export function useBuildReceipt() {
     } finally {
       connectionPending.current = false
     }
-  }, [refreshHistory])
+  }, [refreshHistory, switchNetwork])
 
   const switchAccount = useCallback(async () => {
     const provider = window.ethereum

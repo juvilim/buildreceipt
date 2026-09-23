@@ -416,13 +416,13 @@
   .form-footer .button { width: 100%; }
   .receipt-footer { margin-right: 0; padding-right: 62px; text-align: left; }
   .transaction-status {
-    display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center;
+    display: grid; grid-template-columns: 1fr; align-items: start;
     margin-top: 0; padding: 18px; gap: 16px;
   }
   .transaction-copy { min-width: 0; align-items: flex-start; }
   .transaction-copy p { line-height: 1.5; }
-  .readiness { text-align: right; }
-  .readiness-meter { justify-content: end; }
+  .readiness { text-align: left; }
+  .readiness-meter { justify-content: start; }
   .history-card { grid-template-columns: 1fr; gap: 16px; padding: 18px; }
   .history-primary, .history-meta { grid-column: 1 / -1; }
   .history-action {
@@ -453,9 +453,6 @@
 @media (max-width: 420px) {
   .brand > span:last-child { display: none; }
   .section-heading--row { align-items: flex-start; flex-direction: column; }
-  .transaction-status { grid-template-columns: 1fr; align-items: flex-start; }
-  .readiness { text-align: left; }
-  .readiness-meter { justify-content: start; }
   .receipt-row { grid-template-columns: 1fr; gap: 5px; }
   .receipt-digest { padding-right: 0; }
   .receipt-footer { padding-right: 62px; text-align: left; }
