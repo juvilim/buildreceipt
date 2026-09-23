@@ -196,15 +196,15 @@ Expected:
 
 | Case | Result | Notes / transaction hash |
 | --- | --- | --- |
-| M-01 | ☐ Pass ☐ Fail | |
-| M-02 | ☐ Pass ☐ Fail | |
-| M-03 | ☐ Pass ☐ Fail | |
-| M-04 | ☐ Pass ☐ Fail | |
-| M-05 | ☐ Pass ☐ Fail | |
-| M-06 | ☐ Pass ☐ Fail | |
-| M-07 | ☐ Pass ☐ Fail | |
-| M-08 | ☐ Pass ☐ Fail | |
-| M-09 | ☐ Pass ☐ Fail | |
-| M-10 | ☐ Pass ☐ Fail | |
-| M-11 | ☐ Pass ☐ Fail | |
-| M-12 | ☐ Pass ☐ Fail | |
+| M-01 | ☒ Pass ☐ Fail | Manually confirmed before mainnet deployment. |
+| M-02 | ☒ Pass ☐ Fail | Manually confirmed before mainnet deployment. |
+| M-03 | ☒ Pass ☐ Fail | Manually confirmed before mainnet deployment. |
+| M-04 | ☒ Pass ☐ Fail | Manually confirmed before mainnet deployment. |
+| M-05 | ☒ Pass ☐ Fail | Rejection-and-retry gate completed. |
+| M-06 | ☒ Pass ☐ Fail | `0.2.0-testnet` receipt confirmed. |
+| M-07 | ☒ Pass ☐ Fail | Manually confirmed before mainnet deployment. |
+| M-08 | ☒ Pass ☐ Fail | Manually confirmed before mainnet deployment. |
+| M-09 | ☒ Pass ☐ Fail | Manually confirmed before mainnet deployment. |
+| M-10 | ☒ Pass ☐ Fail | Manually confirmed on BOTScan. |
+| M-11 | ☒ Pass ☐ Fail | Public proof confirmed in an incognito browser without MetaMask. |
+| M-12 | ☒ Pass ☐ Fail | Manually confirmed before mainnet deployment. |

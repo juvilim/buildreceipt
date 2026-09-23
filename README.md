@@ -7,6 +7,8 @@
 </p>
 
 <p align="center">
+  <a href="https://scan.botchain.ai/address/0x6c788cbc498795c0e3247d843431adbd844f73b9">Mainnet contract</a>
+  ·
   <a href="https://scan.bohr.life/address/0x6c788cbc498795c0e3247d843431adbd844f73b9">Testnet contract</a>
   ·
   <a href="https://scan.bohr.life/tx/0x0497d952772dd1c64d1479d5560c35d17ef7a0cff70bcef7ccc6923dea051e2c">First receipt</a>
@@ -24,6 +26,24 @@ The registry is deliberately small and immutable:
 - Required fields cannot be empty and every field has a length limit.
 - The content hash covers the builder and every release field.
 - There are no update, delete, administrator, payment, withdrawal, token, NFT, or upgrade functions.
+
+## BOT Chain mainnet deployment
+
+| Item | Value |
+| --- | --- |
+| Network | BOT Chain Mainnet |
+| Chain ID | `677` |
+| Contract | [`0x6c788cbc498795c0e3247d843431adbd844f73b9`](https://scan.botchain.ai/address/0x6c788cbc498795c0e3247d843431adbd844f73b9) |
+| Deployment transaction | [`0xbdcf…ac7cb2`](https://scan.botchain.ai/tx/0xbdcf94fbdfe1a3b26b95ea8b35218d9171d125db0cf07f7f8137d93c41ac7cb2) |
+| Deployment block | [`24252534`](https://scan.botchain.ai/block/24252534) |
+| Deployer | `0x6d80683ce6e499b7bC499a5716B824959b9BCFe9` |
+| Solidity | `0.8.34+commit.80d5c536` |
+| Source verification | [Fully verified on BOTScan](https://scan.botchain.ai/address/0x6c788cbc498795c0e3247d843431adbd844f73b9?tab=contract) |
+| Deployment date | 23 September 2026 |
+
+The deployment succeeded with an initial receipt count of `0`. A post-deployment RPC check confirmed that the runtime bytecode exactly matches the locally tested artifact, and BOTScan fully verified the submitted source and compiler settings. The machine-readable deployment record is in [`deployments/bot-mainnet.json`](deployments/bot-mainnet.json).
+
+The mainnet and testnet contracts have the same hexadecimal address because they were deployed by the same account at the same deployment nonce. They remain independent contracts on separate chains.
 
 ## BOT Chain testnet deployment
 
@@ -120,6 +140,12 @@ The Ignition module is available at `ignition/modules/BuildReceipt.ts`. BOT Chai
 npx hardhat run scripts/deploy-build-receipt.ts
 ```
 
+The mainnet deployment script performs chain, balance, gas, reserve, source-hash, bytecode, and initial-state checks. It also requires an explicit deployment guard:
+
+```bash
+CONFIRM_BOT_MAINNET_DEPLOY=YES npx hardhat run scripts/deploy-build-receipt-mainnet.ts
+```
+
 After deployment, update the public deployment metadata and verify the contract reads and write flow with a freshly configured script. The existing verification script points to the published testnet contract and creates a real receipt, so running it spends test BOT:
 
 ```bash
@@ -153,9 +179,9 @@ Public reads are also available through `receiptCount()` and `receipts(receiptId
 - [x] First on-chain testnet receipt
 - [x] Responsive frontend shell
 - [x] MetaMask and live Web3 integration
-- [ ] Manual browser transaction gate
+- [x] Manual browser transaction gate
 - [x] Shareable receipt verification pages
-- [ ] BOT Chain mainnet deployment
+- [x] BOT Chain mainnet deployment
 
 ## License
 

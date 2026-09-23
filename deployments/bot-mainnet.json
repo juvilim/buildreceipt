@@ -1,0 +1,22 @@
+{
+  "network": "BOT Chain Mainnet",
+  "chainId": 677,
+  "rpcUrl": "https://rpc.botchain.ai",
+  "explorerUrl": "https://scan.botchain.ai",
+  "contractAddress": "0x6c788cbc498795c0e3247d843431adbd844f73b9",
+  "deploymentTransaction": "0xbdcf94fbdfe1a3b26b95ea8b35218d9171d125db0cf07f7f8137d93c41ac7cb2",
+  "deploymentBlock": 24252534,
+  "deploymentTimestamp": "2026-09-23T14:30:09.000Z",
+  "gasUsed": "1184483",
+  "effectiveGasPriceWei": "20000000000",
+  "deploymentCostWei": "23689660000000000",
+  "deployerBalanceAfterWei": "36310340000000000",
+  "sourceVerifiedAt": "2026-09-23T14:37:30.759444Z",
+  "sourceVerificationUrl": "https://scan.botchain.ai/address/0x6c788cbc498795c0e3247d843431adbd844f73b9?tab=contract",
+  "deployer": "0x6d80683ce6e499b7bc499a5716b824959b9bcfe9",
+  "solidityVersion": "0.8.34+commit.80d5c536",
+  "evmVersion": "osaka",
+  "optimizerEnabled": false,
+  "sourceSha256": "cd60b0b6f5be5e2598118bab5796e459bb9b702dbbabddb52246efc1b49e52f6",
+  "runtimeBytecodeSha256": "71188c334af3078261acc5207855d35d812e42fc9df4ab17a4939aa5d9a0ad1e"
+}

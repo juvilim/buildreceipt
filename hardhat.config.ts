@@ -41,5 +41,12 @@ export default defineConfig({
       url: "https://rpc.bohr.life",
       accounts: [configVariable("BOT_DEPLOYER_PRIVATE_KEY")],
     },
+    botMainnet: {
+      type: "http",
+      chainType: "generic",
+      chainId: 677,
+      url: "https://rpc.botchain.ai",
+      accounts: [configVariable("BOT_DEPLOYER_PRIVATE_KEY")],
+    },
   },
 });
