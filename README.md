@@ -65,7 +65,7 @@ The machine-readable deployment record is in [`deployments/bot-testnet.json`](de
 ## Project structure
 
 ```text
-contracts/        BuildReceipt contract and Solidity tests
+contracts/        BuildReceipt smart contract
 test/             TypeScript integration tests
 ignition/         Hardhat Ignition deployment module and deployment record
 scripts/          Deployment and testnet verification scripts
