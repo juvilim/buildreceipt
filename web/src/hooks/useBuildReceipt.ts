@@ -42,8 +42,8 @@ export function useBuildReceipt() {
   const [historyLoading, setHistoryLoading] = useState(false)
   const [receiptLoading, setReceiptLoading] = useState(false)
   const [receiptError, setReceiptError] = useState<string | null>(null)
+  const [hasMetaMask, setHasMetaMask] = useState(() => typeof window !== 'undefined' && Boolean(window.ethereum))
   const connectionPending = useRef(false)
-  const hasMetaMask = typeof window !== 'undefined' && Boolean(window.ethereum)
 
   const refreshHistory = useCallback(async (builder: Address) => {
     setHistoryLoading(true)
@@ -59,10 +59,12 @@ export function useBuildReceipt() {
   const syncWallet = useCallback(async () => {
     const provider = window.ethereum
     if (!provider) {
+      setHasMetaMask(false)
       setState('disconnected')
-      setMessage('MetaMask was not detected. Install it to create receipts.')
+      setMessage('No wallet found in this browser. Open BuildReceipt in MetaMask Mobile, or install and enable the MetaMask extension.')
       return
     }
+    setHasMetaMask(true)
 
     const accounts = await provider.request({ method: 'eth_accounts' }) as string[]
     const currentChain = Number(await provider.request({ method: 'eth_chainId' }))
@@ -93,15 +95,32 @@ export function useBuildReceipt() {
 
   useEffect(() => {
     queueMicrotask(() => void syncWallet())
-    const provider = window.ethereum
-    if (!provider?.on) return
-
     const handleChange = () => void syncWallet()
-    provider.on('accountsChanged', handleChange)
-    provider.on('chainChanged', handleChange)
+    let provider = window.ethereum
+    const addProviderListeners = () => {
+      provider?.on?.('accountsChanged', handleChange)
+      provider?.on?.('chainChanged', handleChange)
+    }
+    const removeProviderListeners = () => {
+      provider?.removeListener?.('accountsChanged', handleChange)
+      provider?.removeListener?.('chainChanged', handleChange)
+    }
+    const handleProviderReady = () => {
+      if (provider !== window.ethereum) {
+        removeProviderListeners()
+        provider = window.ethereum
+        addProviderListeners()
+      }
+      void syncWallet()
+    }
+
+    addProviderListeners()
+    window.addEventListener('ethereum#initialized', handleProviderReady, { once: true })
+    const providerCheck = window.setTimeout(handleProviderReady, 1500)
     return () => {
-      provider.removeListener?.('accountsChanged', handleChange)
-      provider.removeListener?.('chainChanged', handleChange)
+      window.clearTimeout(providerCheck)
+      window.removeEventListener('ethereum#initialized', handleProviderReady)
+      removeProviderListeners()
     }
   }, [syncWallet])
 

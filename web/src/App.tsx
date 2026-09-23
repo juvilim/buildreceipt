@@ -12,6 +12,7 @@ import { TransactionStatus } from './components/TransactionStatus'
 import { BOT_CHAIN_WEBSITE_URL, botTestnet } from './config/chains'
 import { useBuildReceipt } from './hooks/useBuildReceipt'
 import { computeContentHash, validateDraft } from './lib/buildReceipt'
+import { isMobileBrowser, metaMaskDappUrl, METAMASK_DOWNLOAD_URL } from './lib/walletAccess'
 import type { ReceiptDraft, ReceiptRecord } from './types'
 
 const initialDraft: ReceiptDraft = {
@@ -63,6 +64,7 @@ function App() {
   const [copiedReceiptId, setCopiedReceiptId] = useState<bigint | null>(null)
   const [historyReceipt, setHistoryReceipt] = useState<ReceiptRecord | null>(null)
   const web3 = useBuildReceipt()
+  const mobileBrowser = useMemo(() => isMobileBrowser(), [])
   const loadReceipt = web3.loadReceipt
   const completedFields = useMemo(
     () => Object.values(draft).filter((value) => value.trim().length > 0).length,
@@ -146,18 +148,45 @@ function App() {
     if (created) setDraft(initialDraft)
   }
 
+  function handleWalletConnect() {
+    if (web3.hasMetaMask) {
+      void web3.connect()
+      return
+    }
+    window.location.assign(mobileBrowser ? metaMaskDappUrl() : METAMASK_DOWNLOAD_URL)
+  }
+
   return (
     <div className="app-shell">
       <Header
         completedFields={completedFields}
         account={web3.account}
         hasMetaMask={web3.hasMetaMask}
+        mobileBrowser={mobileBrowser}
         state={web3.state}
         receiptView={receiptRoute.requested}
-        onConnect={web3.connect}
+        onConnect={handleWalletConnect}
         onSwitchAccount={web3.switchAccount}
         onSwitchNetwork={web3.switchNetwork}
       />
+      {!web3.hasMetaMask && !receiptRoute.requested && (
+        <aside className="wallet-guide section-wrap" role="status">
+          <div>
+            <strong>{mobileBrowser ? 'Using a mobile browser?' : 'No wallet found in this browser.'}</strong>
+            <p>
+              {mobileBrowser
+                ? 'Open BuildReceipt inside MetaMask Mobile to connect and create receipts.'
+                : 'Install or enable the MetaMask extension. In an incognito window, allow the extension in incognito or use a regular window.'}
+            </p>
+          </div>
+          <a
+            className="button button--secondary"
+            href={mobileBrowser ? metaMaskDappUrl() : METAMASK_DOWNLOAD_URL}
+          >
+            {mobileBrowser ? 'Open in MetaMask ↗' : 'Install MetaMask ↗'}
+          </a>
+        </aside>
+      )}
       {web3.state === 'connecting' && (
         <StatusToast
           key={`connecting-${web3.message}`}

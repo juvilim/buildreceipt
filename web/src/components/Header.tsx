@@ -6,6 +6,7 @@ type HeaderProps = {
   completedFields: number
   account: Address | null
   hasMetaMask: boolean
+  mobileBrowser: boolean
   state: TransactionState
   receiptView?: boolean
   onConnect: () => void
@@ -17,7 +18,7 @@ function shortAddress(address: Address) {
   return `${address.slice(0, 6)}…${address.slice(-4)}`
 }
 
-export function Header({ completedFields, account, hasMetaMask, state, receiptView = false, onConnect, onSwitchAccount, onSwitchNetwork }: HeaderProps) {
+export function Header({ completedFields, account, hasMetaMask, mobileBrowser, state, receiptView = false, onConnect, onSwitchAccount, onSwitchNetwork }: HeaderProps) {
   const appBaseUrl = import.meta.env.BASE_URL
   const wrongNetwork = state === 'wrong-network'
   const connecting = state === 'connecting'
@@ -30,6 +31,8 @@ export function Header({ completedFields, account, hasMetaMask, state, receiptVi
     ? 'Switch network'
     : connecting
       ? 'MetaMask pending'
+      : !hasMetaMask
+        ? 'Connect wallet'
       : account
         ? `${shortAddress(account)} · Switch`
         : 'Connect wallet'
@@ -69,13 +72,20 @@ export function Header({ completedFields, account, hasMetaMask, state, receiptVi
             type="button"
             onClick={handleWalletAction}
             disabled={connecting}
-            aria-describedby={connecting ? 'wallet-pending-help' : undefined}
+            aria-describedby={connecting ? 'wallet-pending-help' : !hasMetaMask ? 'wallet-missing-help' : undefined}
           >
             {buttonLabel}
           </button>
           {connecting && (
             <span id="wallet-pending-help" className="sr-only">
               Open MetaMask from the browser toolbar to complete or reject the pending request.
+            </span>
+          )}
+          {!hasMetaMask && (
+            <span id="wallet-missing-help" className="sr-only">
+              {mobileBrowser
+                ? 'Open BuildReceipt in the MetaMask Mobile browser to connect your wallet.'
+                : 'Install or enable the MetaMask browser extension, then reload BuildReceipt.'}
             </span>
           )}
         </div>
