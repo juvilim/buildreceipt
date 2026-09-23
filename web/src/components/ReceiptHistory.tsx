@@ -45,7 +45,7 @@ export function ReceiptHistory({ account, loading, receipts, copiedReceiptId, on
             </dl>
             <div className="history-action">
               <span className="anchored-stamp">{receipt.verified ? 'Verified' : 'Hash mismatch'}</span>
-              <a className="text-button history-public-link" href={`/?receipt=${receipt.id.toString()}`}>View proof</a>
+              <a className="text-button history-public-link" href={`${import.meta.env.BASE_URL}?receipt=${receipt.id.toString()}`}>View proof</a>
               <button className="text-button" type="button" onClick={() => onQuickView(receipt)}>Quick view</button>
               <button className="text-button text-button--muted" type="button" onClick={() => void onCopyProofLink(receipt)}>
                 {copiedReceiptId === receipt.id ? 'Link copied' : 'Copy proof link'}

@@ -90,7 +90,7 @@ export function ReceiptPreview({ draft, account, contentHash, receipt, copied = 
       {receipt && (
         <div className="receipt-actions" aria-label="Receipt actions">
           {showPublicLink && (
-            <a className="button button--primary" href={`/?receipt=${receipt.id.toString()}`}>
+            <a className="button button--primary" href={`${import.meta.env.BASE_URL}?receipt=${receipt.id.toString()}`}>
               View proof
             </a>
           )}

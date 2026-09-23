@@ -45,8 +45,7 @@ function receiptRouteFromLocation(): ReceiptRoute {
 }
 
 function receiptProofUrl(id: bigint) {
-  const url = new URL(window.location.origin)
-  url.pathname = window.location.pathname
+  const url = new URL(import.meta.env.BASE_URL, window.location.origin)
   url.searchParams.set('receipt', id.toString())
   return url.toString()
 }

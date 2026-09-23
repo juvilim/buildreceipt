@@ -18,6 +18,7 @@ function shortAddress(address: Address) {
 }
 
 export function Header({ completedFields, account, hasMetaMask, state, receiptView = false, onConnect, onSwitchAccount, onSwitchNetwork }: HeaderProps) {
+  const appBaseUrl = import.meta.env.BASE_URL
   const wrongNetwork = state === 'wrong-network'
   const connecting = state === 'connecting'
   const networkLabel = !hasMetaMask
@@ -40,7 +41,7 @@ export function Header({ completedFields, account, hasMetaMask, state, receiptVi
 
   return (
     <header className="site-header">
-      <a className="brand" href="/" aria-label="BuildReceipt home">
+      <a className="brand" href={appBaseUrl} aria-label="BuildReceipt home">
         <LogoMark />
         <span className="brand-name">BuildReceipt</span>
       </a>
@@ -54,7 +55,7 @@ export function Header({ completedFields, account, hasMetaMask, state, receiptVi
         </nav>
       )}
       {receiptView ? (
-        <a className="button button--secondary header-build-link" href="/#workspace">Build a receipt</a>
+        <a className="button button--secondary header-build-link" href={`${appBaseUrl}#workspace`}>Build a receipt</a>
       ) : (
         <div className="header-actions">
           <div className={`network-status ${wrongNetwork ? 'network-status--wrong' : ''} ${!account ? 'network-status--idle' : ''}`} role="status" aria-live="polite">
