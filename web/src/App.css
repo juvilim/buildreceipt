@@ -370,18 +370,24 @@
 }
 
 @media (max-width: 680px) {
-  .section-wrap, .site-header { width: min(100% - 32px, 1240px); }
-  .site-header { min-height: 72px; }
+  .section-wrap, .site-header { width: min(100% - 40px, 1240px); }
+  .site-header { min-height: 68px; gap: 16px; }
+  .site-header .brand { gap: 9px; }
+  .site-header .brand-mark { width: 28px; height: 31px; }
+  .site-header .button { min-height: 40px; padding: 8px 14px; }
   .network-status { display: none; }
   .button--secondary { padding-inline: 13px; }
   .status-toast { top: 84px; right: 16px; }
-  .hero-intro { padding-block: 56px 48px; }
-  .workspace { padding-block: 44px 32px; }
-  .history { padding-block: 44px; }
+  .hero-intro { padding-block: 44px 40px; }
+  .hero-copy { margin-top: 24px; }
+  .hero-meta { margin-top: 24px; }
+  .workspace { padding-block: 40px 28px; }
+  .history { padding-block: 38px 40px; }
   .workspace-grid { gap: 16px; }
-  .section-heading { margin-bottom: 22px; }
+  .section-heading { margin-bottom: 20px; }
   .section-heading--row { gap: 14px; }
-  .section-heading--row, .transaction-status, .site-footer { align-items: flex-start; flex-direction: column; }
+  .section-heading--row { align-items: end; }
+  .transaction-status, .site-footer { align-items: flex-start; flex-direction: column; }
   .form-grid { grid-template-columns: 1fr; gap: 16px; }
   .history-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
   .history-meta div:last-child { grid-column: 1 / -1; }
@@ -391,13 +397,22 @@
   .panel-heading { margin-bottom: 22px; }
   .form-footer { margin-top: 20px; padding-top: 18px; gap: 16px; }
   .preview-panel { padding: 10px; }
-  .panel-heading, .form-footer { align-items: flex-start; flex-direction: column; }
+  .panel-heading { align-items: center; }
+  .form-footer { align-items: flex-start; flex-direction: column; }
+  .receipt-row dd { font-size: 12.5px; line-height: 1.6; }
+  .receipt-signature strong { font-size: 11.5px; line-height: 1.45; }
+  .receipt-digest code { font-size: 10.5px; line-height: 1.45; }
   .receipt-signature { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; padding-right: 0; }
   .form-footer .button { width: 100%; }
-  .receipt-footer { margin-right: 0; }
-  .transaction-status { margin-top: 0; padding: 18px; gap: 18px; }
-  .readiness { text-align: left; }
-  .readiness-meter { justify-content: start; }
+  .receipt-footer { margin-right: 0; padding-right: 62px; text-align: left; }
+  .transaction-status {
+    display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center;
+    margin-top: 0; padding: 18px; gap: 16px;
+  }
+  .transaction-copy { min-width: 0; align-items: flex-start; }
+  .transaction-copy p { line-height: 1.5; }
+  .readiness { text-align: right; }
+  .readiness-meter { justify-content: end; }
   .history-card { grid-template-columns: 1fr; gap: 16px; padding: 18px; }
   .history-primary, .history-meta { grid-column: 1 / -1; }
   .history-action {
@@ -412,7 +427,11 @@
   }
   .history-action .text-button:hover { border-color: var(--color-primary); }
   .history-action .text-button--muted { font-size: 11px; }
-  .site-footer p { text-align: left; }
+  .history-count { flex: 0 0 auto; white-space: nowrap; }
+  .history-empty { padding-inline: 22px; }
+  .history-empty strong { color: #e0e7e3; line-height: 1.5; }
+  .history-empty p { color: #9da8a2; line-height: 1.55; }
+  .site-footer p { text-align: left; line-height: 1.65; }
   .site-footer { gap: 18px; padding-block: 26px; }
   .shared-receipt { padding-block: 56px; }
   .receipt-dialog-backdrop { align-items: start; padding: 12px; }
@@ -423,6 +442,10 @@
 
 @media (max-width: 420px) {
   .brand > span:last-child { display: none; }
+  .section-heading--row { align-items: flex-start; flex-direction: column; }
+  .transaction-status { grid-template-columns: 1fr; align-items: flex-start; }
+  .readiness { text-align: left; }
+  .readiness-meter { justify-content: start; }
   .receipt-row { grid-template-columns: 1fr; gap: 5px; }
   .receipt-digest { padding-right: 0; }
   .receipt-footer { padding-right: 62px; text-align: left; }
