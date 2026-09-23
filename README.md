@@ -196,4 +196,4 @@ Public reads are also available through `receiptCount()` and `receipts(receiptId
 
 ## License
 
-The smart contract declares SPDX license identifier `MIT`. A repository-level license file will be added before the first public release.
+Licensed under the [MIT License](LICENSE).

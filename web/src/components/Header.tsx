@@ -1,5 +1,6 @@
 import type { Address } from 'viem'
 import { LogoMark } from './LogoMark'
+import { botMainnet } from '../config/chains'
 import type { TransactionState } from '../types'
 
 type HeaderProps = {
@@ -26,7 +27,7 @@ export function Header({ completedFields, account, hasMetaMask, mobileBrowser, s
     ? 'MetaMask not found'
     : !account
       ? 'Wallet disconnected'
-      : wrongNetwork ? 'Wrong network' : 'BOT Testnet'
+      : wrongNetwork ? 'Wrong network' : botMainnet.name
   const buttonLabel = wrongNetwork
     ? 'Switch network'
     : connecting
