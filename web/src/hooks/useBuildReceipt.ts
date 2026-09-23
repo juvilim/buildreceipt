@@ -8,7 +8,7 @@ import {
   type Address,
   type Hash,
 } from 'viem'
-import { BOT_TESTNET_CHAIN_HEX, BOT_TESTNET_FEES, botTestnet } from '../config/chains'
+import { BOT_MAINNET_CHAIN_HEX, BOT_MAINNET_FEES, botMainnet } from '../config/chains'
 import {
   BUILD_RECEIPT_ADDRESS,
   buildReceiptAbi,
@@ -16,7 +16,7 @@ import {
 import { publicClient, readBuilderReceipts, readReceipt } from '../lib/buildReceipt'
 import type { ReceiptDraft, ReceiptRecord, TransactionState } from '../types'
 
-const explorer = botTestnet.blockExplorers.default.url
+const explorer = botMainnet.blockExplorers.default.url
 
 function errorMessage(error: unknown, rejectedMessage = 'Connection request rejected in MetaMask. Your draft is still here.') {
   const code = typeof error === 'object' && error && 'code' in error ? error.code : undefined
@@ -81,9 +81,9 @@ export function useBuildReceipt() {
     const address = getAddress(accounts[0])
     setAccount(address)
     setTransactionHash(null)
-    if (currentChain !== botTestnet.id) {
+    if (currentChain !== botMainnet.id) {
       setState('wrong-network')
-      setMessage('Switch MetaMask to BOT Chain Testnet before creating a receipt.')
+      setMessage('Switch MetaMask to BOT Chain Mainnet before creating a receipt.')
       await refreshHistory(address)
       return
     }
@@ -134,7 +134,7 @@ export function useBuildReceipt() {
     try {
       await provider.request({
         method: 'wallet_switchEthereumChain',
-        params: [{ chainId: BOT_TESTNET_CHAIN_HEX }],
+        params: [{ chainId: BOT_MAINNET_CHAIN_HEX }],
       })
     } catch (error) {
       const code = typeof error === 'object' && error && 'code' in error ? error.code : undefined
@@ -148,10 +148,10 @@ export function useBuildReceipt() {
         await provider.request({
           method: 'wallet_addEthereumChain',
           params: [{
-            chainId: BOT_TESTNET_CHAIN_HEX,
-            chainName: botTestnet.name,
-            nativeCurrency: botTestnet.nativeCurrency,
-            rpcUrls: [...botTestnet.rpcUrls.default.http],
+            chainId: BOT_MAINNET_CHAIN_HEX,
+            chainName: botMainnet.name,
+            nativeCurrency: botMainnet.nativeCurrency,
+            rpcUrls: [...botMainnet.rpcUrls.default.http],
             blockExplorerUrls: [explorer],
           }],
         })
@@ -188,9 +188,9 @@ export function useBuildReceipt() {
       setAccount(address)
       const currentChain = Number(await provider.request({ method: 'eth_chainId' }))
       setChainId(currentChain)
-      if (currentChain !== botTestnet.id) {
+      if (currentChain !== botMainnet.id) {
         setState('wrong-network')
-        setMessage('Wallet connected. Approve the BOT Chain Testnet switch in MetaMask to continue.')
+        setMessage('Wallet connected. Approve the BOT Chain Mainnet switch in MetaMask to continue.')
         if (address) void refreshHistory(address)
         await switchNetwork()
         return
@@ -242,7 +242,7 @@ export function useBuildReceipt() {
       await connect()
       return null
     }
-    if (chainId !== botTestnet.id && !(await switchNetwork())) return null
+    if (chainId !== botMainnet.id && !(await switchNetwork())) return null
 
     setTransactionHash(null)
     setState('awaiting-wallet')
@@ -251,7 +251,7 @@ export function useBuildReceipt() {
     try {
       const walletClient = createWalletClient({
         account,
-        chain: botTestnet,
+        chain: botMainnet,
         transport: custom(provider),
       })
       const args = [draft.project, draft.version, draft.releaseUrl, draft.commitHash, draft.note] as const
@@ -261,7 +261,7 @@ export function useBuildReceipt() {
         abi: buildReceiptAbi,
         functionName: 'createReceipt',
         args,
-        ...BOT_TESTNET_FEES,
+        ...BOT_MAINNET_FEES,
       })
       const hash = await walletClient.writeContract(simulation.request)
       setTransactionHash(hash)
@@ -279,7 +279,7 @@ export function useBuildReceipt() {
       const created = await readReceipt(createdEvent.args.receiptId)
       setSelectedReceipt(created)
       setState('confirmed')
-      setMessage(`Receipt #${created.id.toString()} is confirmed on BOT Chain Testnet.`)
+      setMessage(`Receipt #${created.id.toString()} is confirmed on BOT Chain Mainnet.`)
       await refreshHistory(account)
       return created
     } catch (error) {

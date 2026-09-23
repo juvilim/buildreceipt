@@ -25,13 +25,13 @@ export function ReceiptHistory({ account, loading, receipts, copiedReceiptId, on
         {loading && (
           <div className="history-empty" role="status">
             <strong>Reading receipt history…</strong>
-            <p>Loading this wallet&apos;s records from BOT Chain Testnet.</p>
+            <p>Loading this wallet&apos;s records from BOT Chain Mainnet.</p>
           </div>
         )}
         {!loading && !account && (
           <div className="history-empty" role="status">
             <strong>Connect a wallet to view receipt history.</strong>
-            <p>Your BuildReceipt records will load directly from BOT Chain Testnet.</p>
+            <p>Your BuildReceipt records will load directly from BOT Chain Mainnet.</p>
           </div>
         )}
         {!loading && receipts.map((receipt) => (

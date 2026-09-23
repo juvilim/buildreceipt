@@ -6,7 +6,7 @@ import {
   zeroAddress,
   type Address,
 } from 'viem'
-import { botTestnet } from '../config/chains'
+import { botMainnet } from '../config/chains'
 import {
   BUILD_RECEIPT_ADDRESS,
   BUILD_RECEIPT_DEPLOYMENT_BLOCK,
@@ -16,7 +16,7 @@ import {
 import type { ReceiptDraft, ReceiptRecord } from '../types'
 
 export const publicClient = createPublicClient({
-  chain: botTestnet,
+  chain: botMainnet,
   transport: http(),
 })
 

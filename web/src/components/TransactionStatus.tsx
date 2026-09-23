@@ -1,5 +1,5 @@
 import type { Hash } from 'viem'
-import { botTestnetTransactionUrl } from '../config/chains'
+import { botMainnetTransactionUrl } from '../config/chains'
 import type { TransactionState } from '../types'
 
 type TransactionStatusProps = {
@@ -40,7 +40,7 @@ export function TransactionStatus({ message, completedFields, state, transaction
           <h2 id="transaction-title">TX_STATUS: {statusLabel}</h2>
           <p role="status" aria-live="polite">{statusMessage}</p>
           {transactionHash && (
-            <a className="transaction-link" href={botTestnetTransactionUrl(transactionHash)} target="_blank" rel="noreferrer">
+            <a className="transaction-link" href={botMainnetTransactionUrl(transactionHash)} target="_blank" rel="noreferrer">
               View transaction on BOTScan <span aria-hidden="true">↗</span>
             </a>
           )}

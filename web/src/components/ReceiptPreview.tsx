@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { Address, Hex } from 'viem'
-import { botTestnet, botTestnetTransactionUrl } from '../config/chains'
+import { botMainnet, botMainnetTransactionUrl } from '../config/chains'
 import type { ReceiptDraft, ReceiptRecord } from '../types'
 
 type ReceiptPreviewProps = {
@@ -67,7 +67,7 @@ export function ReceiptPreview({ draft, account, contentHash, receipt, copied = 
         <div className="receipt-rule receipt-rule--dashed" />
         <div className="receipt-signature">
           <div><span>Builder</span><strong>{receipt ? receipt.builder : account ? shortAddress(account) : 'Not connected'}</strong></div>
-          <div><span>Network</span><strong>{botTestnet.name} · {botTestnet.id}</strong></div>
+          <div><span>Network</span><strong>{botMainnet.name} · {botMainnet.id}</strong></div>
           <div><span>Created</span><strong>{receipt ? receiptTimestamp(receipt.createdAt) : 'After confirmation'}</strong></div>
           <div><span>Block</span><strong>{receipt?.blockNumber?.toString() ?? (receipt ? 'See BOTScan' : 'After confirmation')}</strong></div>
         </div>
@@ -100,7 +100,7 @@ export function ReceiptPreview({ draft, account, contentHash, receipt, copied = 
             </button>
           )}
           {receipt.transactionHash && (
-            <a className="button button--secondary" href={botTestnetTransactionUrl(receipt.transactionHash)} target="_blank" rel="noreferrer">
+            <a className="button button--secondary" href={botMainnetTransactionUrl(receipt.transactionHash)} target="_blank" rel="noreferrer">
               View on BOTScan <span aria-hidden="true">↗</span>
             </a>
           )}

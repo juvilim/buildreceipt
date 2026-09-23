@@ -1,7 +1,7 @@
-import { botTestnet } from '../config/chains'
+import { botMainnet } from '../config/chains'
 import { BUILD_RECEIPT_ADDRESS } from '../config/contract'
 
-const contractUrl = `${botTestnet.blockExplorers.default.url}/address/${BUILD_RECEIPT_ADDRESS}`
+const contractUrl = `${botMainnet.blockExplorers.default.url}/address/${BUILD_RECEIPT_ADDRESS}`
 
 export function HeroIntro() {
   return (
@@ -26,8 +26,8 @@ export function HeroIntro() {
             <span className="protocol-state"><i aria-hidden="true" /> CONTRACT_LIVE</span>
           </div>
           <dl className="registry-details">
-            <div><dt>Network</dt><dd>{botTestnet.name}</dd></div>
-            <div><dt>Chain ID</dt><dd>{botTestnet.id}</dd></div>
+            <div><dt>Network</dt><dd>{botMainnet.name}</dd></div>
+            <div><dt>Chain ID</dt><dd>{botMainnet.id}</dd></div>
             <div><dt>Contract</dt><dd>{`${BUILD_RECEIPT_ADDRESS.slice(0, 8)}…${BUILD_RECEIPT_ADDRESS.slice(-6)}`}</dd></div>
             <div><dt>Record</dt><dd>Append-only</dd></div>
           </dl>

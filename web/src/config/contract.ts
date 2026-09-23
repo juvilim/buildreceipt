@@ -3,7 +3,7 @@ import type { Address } from 'viem'
 export const BUILD_RECEIPT_ADDRESS: Address =
   '0x6c788cbc498795c0e3247d843431adbd844f73b9'
 
-export const BUILD_RECEIPT_DEPLOYMENT_BLOCK = 23_979_069n
+export const BUILD_RECEIPT_DEPLOYMENT_BLOCK = 24_252_534n
 
 export const FIELD_LIMITS = {
   project: 128,

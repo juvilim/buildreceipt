@@ -9,7 +9,7 @@ import { ReceiptHistory } from './components/ReceiptHistory'
 import { ReceiptPreview } from './components/ReceiptPreview'
 import { StatusToast } from './components/StatusToast'
 import { TransactionStatus } from './components/TransactionStatus'
-import { BOT_CHAIN_WEBSITE_URL, botTestnet } from './config/chains'
+import { BOT_CHAIN_WEBSITE_URL, botMainnet } from './config/chains'
 import { useBuildReceipt } from './hooks/useBuildReceipt'
 import { computeContentHash, validateDraft } from './lib/buildReceipt'
 import { isMobileBrowser, metaMaskDappUrl, METAMASK_DOWNLOAD_URL } from './lib/walletAccess'
@@ -87,7 +87,7 @@ function App() {
           ? completedFields === 5 ? 'Fix invalid release details' : 'Complete release details'
           : !web3.account
             ? 'Connect wallet to sign'
-            : web3.chainId !== botTestnet.id
+            : web3.chainId !== botMainnet.id
               ? 'Switch network'
               : 'Create on-chain receipt'
 
@@ -140,7 +140,7 @@ function App() {
       await web3.connect()
       return
     }
-    if (web3.chainId !== botTestnet.id) {
+    if (web3.chainId !== botMainnet.id) {
       await web3.switchNetwork()
       return
     }
@@ -207,10 +207,10 @@ function App() {
           <div className="shared-receipt__heading">
             <p className="eyebrow">Public receipt verification</p>
             <h1>Proof anyone can verify.</h1>
-            <p>Loaded directly from the immutable BuildReceipt registry on BOT Chain Testnet.</p>
+            <p>Loaded directly from the immutable BuildReceipt registry on BOT Chain Mainnet.</p>
           </div>
           {receiptRoute.error && <div className="history-empty history-empty--error" role="alert"><strong>Invalid receipt link</strong><p>{receiptRoute.error}</p></div>}
-          {sharedReceiptId && web3.receiptLoading && <div className="history-empty" role="status"><strong>Loading receipt #{sharedReceiptId.toString()}…</strong><p>Reading the public record from BOT Chain Testnet.</p></div>}
+          {sharedReceiptId && web3.receiptLoading && <div className="history-empty" role="status"><strong>Loading receipt #{sharedReceiptId.toString()}…</strong><p>Reading the public record from BOT Chain Mainnet.</p></div>}
           {web3.receiptError && <div className="history-empty history-empty--error" role="alert"><strong>Receipt unavailable</strong><p>{web3.receiptError}</p></div>}
           {!web3.receiptLoading && web3.selectedReceipt && (
             <div className="shared-receipt__card">
@@ -293,7 +293,7 @@ function App() {
           Immutable release evidence on{' '}
           <a href={BOT_CHAIN_WEBSITE_URL} target="_blank" rel="noreferrer">BOT Chain</a>
           {' '}·{' '}
-          <a href={botTestnet.blockExplorers.default.url} target="_blank" rel="noreferrer">BOTScan</a>
+          <a href={botMainnet.blockExplorers.default.url} target="_blank" rel="noreferrer">BOTScan</a>
         </p>
       </footer>
     </div>
